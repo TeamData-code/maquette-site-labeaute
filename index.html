@@ -65,7 +65,7 @@
         .status-messages {
             position: relative;
             height: 10vh;
-            min-height: 60px;
+            min-height: 80px;
             margin: 2rem 0;
             overflow: hidden;
         }
@@ -75,7 +75,7 @@
             width: 100%;
             opacity: 0;
             animation: message-fade 9s infinite;
-            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            font-size: clamp(1rem, 4vw, 1.2rem);
             padding: 1vh 0;
             transform: translateY(4vh);
             line-height: 1.4;
@@ -178,27 +178,50 @@
             }
 
             .status-messages {
-                height: 15vh;
-                margin: 1.5rem 0;
+                height: 20vh;
+                min-height: 100px;
+                margin: 1rem 0;
             }
 
             .status-message {
-                transform: translateY(6vh);
-                padding: 0.5rem 10px;
+                transform: translateY(8vh);
+                padding: 0.5rem 15px;
+                line-height: 1.6;
             }
 
             @keyframes message-fade {
                 0% {
-                    transform: translateY(6vh);
+                    opacity: 0;
+                    transform: translateY(8vh);
+                }
+                15% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                30% {
+                    opacity: 1;
+                    transform: translateY(0);
                 }
                 45% {
-                    transform: translateY(-6vh);
+                    opacity: 0;
+                    transform: translateY(-8vh);
+                }
+                100% {
+                    opacity: 0;
+                    transform: translateY(-8vh);
                 }
             }
 
             .logo-img {
                 max-width: 120px;
                 margin-bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 320px) {
+            .status-message {
+                font-size: 0.95rem;
+                transform: translateY(6vh);
             }
         }
     </style>
@@ -238,3 +261,4 @@
     </footer>
 </body>
 </html>
+
