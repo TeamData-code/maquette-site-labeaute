@@ -1,264 +1,658 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maintenance en cours - La Beauté</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #0984e3;
-            --accent: #00cec9;
-            --glass: rgba(255, 255, 255, 0.1);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant La Beauté - Slideshow</title>
+  <meta name="description" content="Une expérience culinaire sénégalaise" />
+  <meta name="author" content="Team Data" />
+
+  <meta property="og:title" content="Restaurant La Beauté" />
+  <meta property="og:description" content="Une expérience culinaire sénégalaise" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@lovable_dev" />
+  <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Base styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --primary: #e1e1e1;
+      --secondary: #24232d;
+      --dark: #0c0b1a;
+      --light: #f9f5f0;
+      --accent: #12095c;
+      --glass: rgba(50, 14, 94, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--dark);
+      color: var(--light);
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      padding: 0;
+    }
+    
+    /* Typography */
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    
+    p.subtitle {
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      color: var(--light);
+      margin-bottom: 1rem;
+      text-align: center;
+      max-width: 600px;
+      padding: 0 1rem;
+      opacity: 0.9;
+    }
+    
+    /* Main container */
+    .main-container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+    
+    /* Slideshow container */
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(24, 24, 24, 0.3);
+    }
+    
+    .slides-wrapper {
+      position: relative;
+      height: 60vh;
+      min-height: 400px;
+      max-height: 600px;
+    }
+    
+    /* Individual slides */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 0;
+    }
+    
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 10;
+    }
+    
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    
+    /* Loading indicator */
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(11, 11, 26, 0.7);
+      z-index: 5;
+    }
+    
+    .spinner {
+      width: 3rem;
+      height: 3rem;
+      border: 4px solid rgba(132, 125, 232, 0.3);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    /* Navigation buttons */
+    .prev-btn, .next-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(19, 19, 20, 0.7);
+      color: var(--dark);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      z-index: 20;
+      transition: var(--transition);
+      opacity: 0.8;
+    }
+    
+    .prev-btn:hover, .next-btn:hover {
+      opacity: 1;
+      background-color: var(--primary);
+    }
+    
+    .prev-btn {
+      left: 15px;
+    }
+    
+    .next-btn {
+      right: 15px;
+    }
+    
+    /* Indicator dots */
+    .indicators {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      max-width: 90%;
+      padding: 0.5rem;
+      z-index: 20;
+    }
+    
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .dot:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .dot.active {
+      background-color: var(--primary);
+      transform: scale(1.2);
+    }
+
+    /* Status messages */
+    .status-section {
+      width: 100%;
+      max-width: 800px;
+      margin: 1rem auto;
+    }
+
+    .status-messages {
+      position: relative;
+      height: 80px;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+
+    .status-message {
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      animation: message-fade 9s infinite;
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      padding: 0.5rem 0;
+      transform: translateY(20px);
+      line-height: 1.4;
+      text-align: center;
+      color: var(--primary);
+      will-change: opacity, transform;
+    }
+
+    @keyframes message-fade {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      15% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      30% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      45% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+    }
+
+    .status-message:nth-child(1) { animation-delay: 0s; }
+    .status-message:nth-child(2) { animation-delay: 3s; }
+    .status-message:nth-child(3) { animation-delay: 6s; }
+
+    /* Progress bar */
+    .progress-bar {
+      height: 3px;
+      background: rgba(150, 125, 232, 0.2);
+      margin: 1rem auto;
+      width: 60%;
+      max-width: 400px;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      animation: progress 3s ease-in-out infinite;
+    }
+
+    /* Footer */
+    footer {
+      position: fixed;
+      bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.8rem 1.5rem;
+      background: rgba(14, 11, 26, 0.8);
+      border-radius: 50px;
+      backdrop-filter: blur(10px);
+      font-size: 0.9rem;
+      color: var(--light);
+      z-index: 100;
+    }
+
+    .dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .footer-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite;
+    }
+
+    .footer-dot:nth-child(2) { animation-delay: 0.2s; }
+    .footer-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    /* Animations */
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes progress {
+      0%, 100% { width: 20%; }
+      50% { width: 80%; }
+    }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-5px); }
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .slides-wrapper {
+        height: 50vh;
+        min-height: 300px;
+      }
+      
+      .prev-btn, .next-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+      }
+      
+      footer {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 15px;
+      }
+      
+      .slides-wrapper {
+        height: 40vh;
+        min-height: 250px;
+      }
+      
+      .status-messages {
+        height: 60px;
+      }
+      
+      .status-message {
+        transform: translateY(15px);
+      }
+      
+      @keyframes message-fade {
+        0% {
+          opacity: 0;
+          transform: translateY(15px);
         }
-
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: #1a1a2e;
-            color: white;
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
+        15% {
+          opacity: 1;
+          transform: translateY(0);
         }
-
-        .container {
-            text-align: center;
-            padding: 2rem;
-            max-width: 600px;
-            width: 90%;
+        30% {
+          opacity: 1;
+          transform: translateY(0);
         }
-
-        .logo-container {
-            text-align: center;
-            margin-bottom: 2rem;
-            width: 100%;
+        45% {
+          opacity: 0;
+          transform: translateY(-15px);
         }
-
-        .logo-img {
-            max-width: 150px;
-            height: auto;
-            margin: 0 auto 1.5rem;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+        100% {
+          opacity: 0;
+          transform: translateY(-15px);
         }
-
-        .spinning-gear {
-            width: 120px;
-            height: 120px;
-            margin-top: -1rem;
-            animation: spin 2s linear infinite;
-            filter: drop-shadow(0 0 10px var(--primary));
-        }
-
-        h1 {
-            font-size: clamp(1.5rem, 6vw, 2.5rem);
-            margin: 0 0 1rem;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .status-messages {
-            position: relative;
-            height: 10vh;
-            min-height: 80px;
-            margin: 2rem 0;
-            overflow: hidden;
-        }
-
-        .status-message {
-            position: absolute;
-            width: 100%;
-            opacity: 0;
-            animation: message-fade 9s infinite;
-            font-size: clamp(1rem, 4vw, 1.2rem);
-            padding: 1vh 0;
-            transform: translateY(4vh);
-            line-height: 1.4;
-            will-change: opacity, transform;
-        }
-
-        @keyframes message-fade {
-            0% {
-                opacity: 0;
-                transform: translateY(4vh);
-            }
-            15% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            30% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            45% {
-                opacity: 0;
-                transform: translateY(-4vh);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-4vh);
-            }
-        }
-
-        .status-message:nth-child(1) { animation-delay: 0s; }
-        .status-message:nth-child(2) { animation-delay: 3s; }
-        .status-message:nth-child(3) { animation-delay: 6s; }
-
-        .progress-bar {
-            height: 3px;
-            background: rgba(255,255,255,0.1);
-            margin: 2rem auto;
-            width: 60%;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            width: 60%;
-            height: 100%;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            animation: progress 3s ease-in-out infinite;
-        }
-
-        footer {
-            position: fixed;
-            bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 2rem;
-            background: var(--glass);
-            border-radius: 50px;
-            backdrop-filter: blur(10px);
-        }
-
-        .dots {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            animation: bounce 1.4s infinite;
-        }
-
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes progress {
-            0%, 100% { width: 20%; }
-            50% { width: 80%; }
-        }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-6px); }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            footer {
-                padding: 0.8rem 1.5rem;
-                font-size: 0.9rem;
-            }
-
-            .status-messages {
-                height: 20vh;
-                min-height: 100px;
-                margin: 1rem 0;
-            }
-
-            .status-message {
-                transform: translateY(8vh);
-                padding: 0.5rem 15px;
-                line-height: 1.6;
-            }
-
-            @keyframes message-fade {
-                0% {
-                    opacity: 0;
-                    transform: translateY(8vh);
-                }
-                15% {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-                30% {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-                45% {
-                    opacity: 0;
-                    transform: translateY(-8vh);
-                }
-                100% {
-                    opacity: 0;
-                    transform: translateY(-8vh);
-                }
-            }
-
-            .logo-img {
-                max-width: 120px;
-                margin-bottom: 1rem;
-            }
-        }
-
-        @media (max-width: 320px) {
-            .status-message {
-                font-size: 0.95rem;
-                transform: translateY(6vh);
-            }
-        }
-    </style>
+      }
+      
+      footer {
+        bottom: 0.5rem;
+        padding: 0.6rem 1rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>Restauration La Beauté</h1>
-        <h2>Bienvenue sur notre site</h2>
-        <div class="logo-container">
-            <img src="logo.png" alt="Logo La Beauté" class="logo-img">
-        </div>
-
-        <!-- <svg class="spinning-gear" viewBox="0 0 100 100">
-            <image href="https://images.emojiterra.com/google/noto-emoji/animated-emoji/2699.gif" width="100" height="100" preserveAspectRatio="xMidYMid meet" />
-        </svg> -->
-
-        <h1>Site en cours de configuration</h1>
-
-        <div class="status-messages">
-            <p class="status-message">Initialisation du système...</p>
-            <p class="status-message">Chargement des composants...</p>
-            <p class="status-message">Finalisation du design...</p>
-        </div>
-
-        <div class="progress-bar">
-            <div class="progress-fill"></div>
-        </div>
+  <div class="main-container">
+    <h1>Restaurant La Beauté</h1>
+    <p class="subtitle">Une expérience culinaire sénégalaise</p>
+    
+    <div class="slideshow-container">
+      <div class="slides-wrapper" id="slides-wrapper">
+        <!-- Slides will be dynamically inserted here -->
+      </div>
+      
+      <!-- Navigation buttons -->
+      <button class="prev-btn" aria-label="Previous slide">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <button class="next-btn" aria-label="Next slide">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      
+      <!-- Indicator dots -->
+      <div class="indicators" id="indicators">
+        <!-- Dots will be dynamically inserted here -->
+      </div>
     </div>
+    
+    <div class="status-section">
+      <div class="status-messages">
+        <p class="status-message">Initialisation du système...</p>
+        <p class="status-message">Chargement des composants...</p>
+        <p class="status-message">Finalisation du design...</p>
+      </div>
 
-    <footer>
-        <p>© 2025 Restauration La Beauté</p>
-        <div class="dots">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
-    </footer>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Restaurant La Beauté</p>
+    <div class="dots">
+      <div class="footer-dot"></div>
+      <div class="footer-dot"></div>
+      <div class="footer-dot"></div>
+    </div>
+  </footer>
+  
+  <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+  <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Image paths
+      const images = [
+        "./img1.png",
+        "./img2.png",
+        "./img3.png",
+        "./img4.png",
+        "./img5.png",
+        "./img6.png",
+        "./img7.png",
+        "./img8.png",
+        "./img9.png",
+        "./img10.png",
+        "./img11.png",
+        "./img1.png",
+      ];
+      
+      // Variables
+      let currentIndex = 0;
+      let interval;
+      const autoplayInterval = 5000;
+      const slidesWrapper = document.getElementById('slides-wrapper');
+      const indicators = document.getElementById('indicators');
+      const imagesLoaded = Array(images.length).fill(false);
+      
+      // Initialize slideshow
+      function initSlideshow() {
+        // Create slides
+        images.forEach((src, index) => {
+          // Create slide
+          const slide = document.createElement('div');
+          slide.className = `slide ${index === 0 ? 'active' : ''}`;
+          slide.setAttribute('data-index', index);
+          
+          // Create loader
+          const loader = document.createElement('div');
+          loader.className = 'loader';
+          loader.innerHTML = '<div class="spinner"></div>';
+          
+          // Create image
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = `Slide ${index + 1}`;
+          img.style.opacity = '0';
+          img.loading = 'lazy';
+          
+          // When image loads, hide loader
+          img.onload = function() {
+            imagesLoaded[index] = true;
+            img.style.opacity = '1';
+            loader.style.display = 'none';
+          };
+          
+          // Handle image error
+          img.onerror = function() {
+            loader.style.display = 'none';
+            img.style.opacity = '1';
+            img.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"%3E%3Crect fill="%23e8c07d" width="800" height="600"/%3E%3Ctext fill="%231a120b" font-family="Arial" font-size="24" dy=".3em" text-anchor="middle" x="400" y="300"%3EImage not available%3C/text%3E%3C/svg%3E';
+          };
+          
+          // Append elements
+          slide.appendChild(loader);
+          slide.appendChild(img);
+          slidesWrapper.appendChild(slide);
+          
+          // Create indicator dot
+          const dot = document.createElement('button');
+          dot.className = `dot ${index === 0 ? 'active' : ''}`;
+          dot.setAttribute('data-index', index);
+          dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+          dot.addEventListener('click', () => goToSlide(index));
+          indicators.appendChild(dot);
+        });
+        
+        // Start autoplay
+        startAutoplay();
+        
+        // Add event listeners
+        document.querySelector('.prev-btn').addEventListener('click', goToPrevious);
+        document.querySelector('.next-btn').addEventListener('click', goToNext);
+        document.addEventListener('keydown', handleKeyDown);
+        initSwipe();
+        
+        // Pause autoplay when user interacts with slideshow
+        slidesWrapper.addEventListener('mouseenter', pauseAutoplay);
+        slidesWrapper.addEventListener('mouseleave', startAutoplay);
+        slidesWrapper.addEventListener('focusin', pauseAutoplay);
+        slidesWrapper.addEventListener('focusout', startAutoplay);
+      }
+      
+      // Go to previous slide
+      function goToPrevious() {
+        const newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+        goToSlide(newIndex);
+      }
+      
+      // Go to next slide
+      function goToNext() {
+        const newIndex = (currentIndex + 1) % images.length;
+        goToSlide(newIndex);
+      }
+      
+      // Go to specific slide
+      function goToSlide(index) {
+        if (index === currentIndex) return;
+        
+        // Get current and next slides
+        const currentSlide = document.querySelector('.slide.active');
+        const nextSlide = document.querySelector(`.slide[data-index="${index}"]`);
+        
+        // Update slides
+        if (currentSlide) {
+          currentSlide.classList.remove('active');
+        }
+        
+        nextSlide.classList.add('active');
+        
+        // Update dots
+        document.querySelector('.dot.active').classList.remove('active');
+        document.querySelector(`.dot[data-index="${index}"]`).classList.add('active');
+        
+        // Update current index
+        currentIndex = index;
+        
+        // Reset autoplay
+        restartAutoplay();
+      }
+      
+      // Start autoplay
+      function startAutoplay() {
+        if (!interval) {
+          interval = setInterval(goToNext, autoplayInterval);
+        }
+      }
+      
+      // Pause autoplay
+      function pauseAutoplay() {
+        clearInterval(interval);
+        interval = null;
+      }
+      
+      // Restart autoplay
+      function restartAutoplay() {
+        pauseAutoplay();
+        startAutoplay();
+      }
+      
+      // Handle keyboard navigation
+      function handleKeyDown(e) {
+        if (e.key === 'ArrowLeft') {
+          goToPrevious();
+        } else if (e.key === 'ArrowRight') {
+          goToNext();
+        }
+      }
+      
+      // Initialize swipe functionality
+      function initSwipe() {
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        const minSwipeDistance = 50;
+        
+        slidesWrapper.addEventListener('touchstart', e => {
+          touchStartX = e.changedTouches[0].screenX;
+          pauseAutoplay();
+        }, { passive: true });
+        
+        slidesWrapper.addEventListener('touchend', e => {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe();
+          startAutoplay();
+        }, { passive: true });
+        
+        function handleSwipe() {
+          const distance = touchStartX - touchEndX;
+          
+          if (Math.abs(distance) > minSwipeDistance) {
+            if (distance > 0) {
+              // Swipe left
+              goToNext();
+            } else {
+              // Swipe right
+              goToPrevious();
+            }
+          }
+        }
+      }
+      
+      // Initialize slideshow
+      initSlideshow();
+    });
+  </script>
 </body>
 </html>
-
